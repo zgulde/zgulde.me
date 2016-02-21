@@ -37,8 +37,12 @@ $app->post('/cardsapi/decks', function($req, $res, $args){
 });
 
 $app->get('/cardsapi/decks/{id}', function($req, $res, $args){
-    $deck = Deck::find($args['id']);
-    $res->write(json_encode($deck));
+    try {
+        $deck = Deck::find($args['id']);
+        $res->write(json_encode($deck));
+    } catch (Exception $e) {
+        $res->write(json_encode(['error' => $e->getMessage()]));
+    }
     return $res;
 });
 
