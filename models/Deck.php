@@ -30,7 +30,7 @@ class Deck {
 
     public static function find($id){
         // grab the PDO database connection
-        require_once '../dbc.php';
+        require '../dbc.php';
 
         $query = 'SELECT cards FROM decks WHERE id = :id';
         $stmt = $dbc->prepare($query);
@@ -48,11 +48,21 @@ class Deck {
 
     }
 
+    public function shuffle(){
+        shuffle($this->cards);
+    }
+
     public function save(){
-        require_once '../dbc.php';
+        require '../dbc.php';
 
         if ($this->id) {
             // update
+            $query = 'UPDATE decks SET cards = :cards WHERE id = :id';
+            $stmt = $dbc->prepare($query);
+            $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_STR);
+            $stmt->execute();
+
         } else {
             // no id, so this is a new deck 
             $query = 'INSERT INTO decks (cards) VALUES (:cards)';
