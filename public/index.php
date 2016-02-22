@@ -31,23 +31,31 @@ $app->get('/cardsapi', function($req, $res, $args){
  */
 
 $app->post('/cardsapi/decks', function($req, $res, $args){
+    $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
+
     $deck = new Deck();
+    $deck->save();
     $res->write(json_encode($deck));
+
     return $res;
 });
 
 $app->get('/cardsapi/decks/{id}', function($req, $res, $args){
     $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
+
     try {
         $deck = Deck::find($args['id']);
         $res->write(json_encode($deck));
     } catch (Exception $e) {
         $res->write(json_encode(['error' => $e->getMessage()]));
     }
+
     return $res;
 });
 
 $app->put('/cardsapi/decks/{id}', function($req, $res, $args){
+    $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
+
     try {
         $deck = Deck::find($args['id']);
     } catch (Exception $e) {
