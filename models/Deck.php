@@ -48,6 +48,22 @@ class Deck {
 
     }
 
+    public function draw($count = 1){
+        if (!is_numeric($count) || $count < 1 ) {
+            throw new Exception("count must be a positive number!");
+        }
+
+        if ($count > count($this->cards)) {
+            throw new Exception("trying to draw more cards than the deck contains!");
+        }
+
+        $cards = [];
+        for ($i=0; $i < $count; $i++) { 
+            $cards[] = array_pop($this->cards);
+        }
+        return $cards;
+    }
+
     public function shuffle(){
         shuffle($this->cards);
     }
