@@ -8,6 +8,8 @@ class Deck {
 
     public function __construct($id = null, $cards = []){
 
+        $this->id = $id;
+
         // create a new full deck if no cards are passed
         if (empty($cards)){
             $suits  = ['C', 'S', 'H', 'D'];
@@ -24,20 +26,6 @@ class Deck {
                 $this->cards[] = new Card($card);
             }
         }
-
-        // check if id is null if so, this is a new Deck, insert it into db 
-        // and save it, otherwise just return a deck object with given id
-        if ($id){
-            $this->id = $id;
-        } else {
-            require_once '../dbc.php';
-            $query = 'INSERT INTO decks (cards) VALUES (:cards)';
-            $stmt = $dbc->prepare($query);
-            $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
-            $stmt->execute();
-            $this->id = $dbc->lastInsertId();
-        }
-
     }
 
     public static function find($id){
@@ -51,8 +39,6 @@ class Deck {
 
         $cards = $stmt->fetch(PDO::FETCH_ASSOC)['cards'];
 
-
-
         if ($cards) {
             $cards = json_decode($cards, true);
             return new self($id, $cards);
@@ -60,6 +46,21 @@ class Deck {
             throw new Exception("Deck with id $id not found");
         }
 
+    }
+
+    public function save(){
+        require_once '../dbc.php';
+
+        if ($this->id) {
+            // update
+        } else {
+            // no id, so this is a new deck 
+            $query = 'INSERT INTO decks (cards) VALUES (:cards)';
+            $stmt = $dbc->prepare($query);
+            $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
+            $stmt->execute();
+            $this->id = $dbc->lastInsertId();
+        }
     }
 
 }
