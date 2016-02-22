@@ -31,9 +31,15 @@ $app->get('/cardsapi', function($req, $res, $args){
  */
 
 $app->post('/cardsapi/decks', function($req, $res, $args){
-    $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
+    $res    = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
+    $params = $req->getParsedBody();
 
     $deck = new Deck();
+
+    if (isset($params['shuffle']) && $params['shuffle'] == 'true'){
+        $deck->shuffle();
+    }
+
     $deck->save();
     $res->write(json_encode($deck));
 
