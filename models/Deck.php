@@ -3,8 +3,9 @@
 require_once 'Card.php';
 
 class Deck {
-    public $cards = []; 
-    public $id    = 0;
+    public $cards           = []; 
+    public $id              = 0;
+    public $cards_remaining = 0;
 
     public function __construct($id = null, $cards = []){
 
@@ -26,6 +27,8 @@ class Deck {
                 $this->cards[] = new Card($card);
             }
         }
+
+        $this->cards_remaining = count($this->cards);
     }
 
     public static function find($id){
@@ -61,6 +64,9 @@ class Deck {
         for ($i=0; $i < $count; $i++) { 
             $cards[] = array_pop($this->cards);
         }
+
+        $this->cards_remaining = count($this->cards);
+
         return $cards;
     }
 
