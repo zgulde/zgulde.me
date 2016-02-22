@@ -37,6 +37,7 @@ $app->post('/cardsapi/decks', function($req, $res, $args){
 });
 
 $app->get('/cardsapi/decks/{id}', function($req, $res, $args){
+    $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
     try {
         $deck = Deck::find($args['id']);
         $res->write(json_encode($deck));
