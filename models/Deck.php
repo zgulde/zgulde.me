@@ -27,8 +27,16 @@ class Deck {
 
         // check if id is null if so, this is a new Deck, insert it into db 
         // and save it, otherwise just return a deck object with given id
-
-
+        if ($id){
+            $this->id = $id;
+        } else {
+            require_once '../dbc.php';
+            $query = 'INSERT INTO decks (cards) VALUES (:cards)';
+            $stmt = $dbc->prepare($query);
+            $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
+            $stmt->execute();
+            $this->id = $dbc->lastInsertId();
+        }
 
     }
 
