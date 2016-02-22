@@ -9,5 +9,5 @@ $createTableQuery = 'CREATE TABLE decks(
     PRIMARY KEY (id)
 )';
 
-$dbc->exec('DROP TABLE IF EXISTS cards');
+$dbc->exec('DROP TABLE IF EXISTS decks');
 $dbc->exec($createTableQuery);
