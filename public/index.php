@@ -65,15 +65,30 @@ $app->put('/cardsapi/decks/{id}', function($req, $res, $args){
             $deck->save();
             $res->write(json_encode(['success' => true]));
             break;
+
         case 'draw':
-            // return cards drawn and update deck
+            $count = isset($params['count']) ? $params['count'] : 1;
+            try {
+                $res->write(json_encode([
+                    'success' => true,
+                    'cards' => $deck->draw($count)
+                ]));
+            } catch (Exception $e) {
+                $res->write(json_encode([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]));
+            }
+            $deck->save();
             break;
+
         default: 
             $res->write(json_encode([
                 'success' => false,
                 'error' => 'invalid action!'
             ]));
             break;
+
     }
     return $res;
 });
