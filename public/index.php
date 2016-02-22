@@ -53,7 +53,7 @@ $app->put('/cardsapi/decks/{id}', function($req, $res, $args){
     } catch (Exception $e) {
         $res->write(json_encode([
             'success' => false,
-            'error' => $e->getMessage()
+            'error'   => $e->getMessage()
         ]));
     }
 
@@ -63,20 +63,24 @@ $app->put('/cardsapi/decks/{id}', function($req, $res, $args){
         case 'shuffle':
             $deck->shuffle();
             $deck->save();
-            $res->write(json_encode(['success' => true]));
+            $res->write(json_encode([
+                'success'         => true,
+                'cards_remaining' => $deck->cards_remaining
+            ]));
             break;
 
         case 'draw':
             $count = isset($params['count']) ? $params['count'] : 1;
             try {
                 $res->write(json_encode([
-                    'success' => true,
-                    'cards' => $deck->draw($count)
+                    'success'         => true,
+                    'cards'           => $deck->draw($count),
+                    'cards_remaining' => $deck->cards_remaining
                 ]));
             } catch (Exception $e) {
                 $res->write(json_encode([
                     'success' => false,
-                    'error' => $e->getMessage()
+                    'error'   => $e->getMessage()
                 ]));
             }
             $deck->save();
@@ -85,7 +89,7 @@ $app->put('/cardsapi/decks/{id}', function($req, $res, $args){
         default: 
             $res->write(json_encode([
                 'success' => false,
-                'error' => 'invalid action!'
+                'error'   => 'invalid action!'
             ]));
             break;
 
