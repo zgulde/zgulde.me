@@ -51,19 +51,28 @@ $app->put('/cardsapi/decks/{id}', function($req, $res, $args){
     try {
         $deck = Deck::find($args['id']);
     } catch (Exception $e) {
-        $res->write(json_encode(['error' => $e->getMessage()]));
+        $res->write(json_encode([
+            'success' => false,
+            'error' => $e->getMessage()
+        ]));
     }
 
     $params = $req->getParsedBody();
+
     switch ($params['action']){
         case 'shuffle':
-            // shuffle the deck's cards and save it
+            $deck->shuffle();
+            $deck->save();
+            $res->write(json_encode(['success' => true]));
             break;
         case 'draw':
             // return cards drawn and update deck
             break;
         default: 
-            $res->write(json_encode(['error' => 'invalid action!']));
+            $res->write(json_encode([
+                'success' => false,
+                'error' => 'invalid action!'
+            ]));
             break;
     }
     return $res;
