@@ -7,12 +7,15 @@ function dd($var){
     die();
 }
 
-set_error_handler(function($no, $msg){
-    var_dump($msg);
-    die();
-});
+$configuration = [
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+];
 
-$app = new Slim\App();
+$c = new \Slim\Container($configuration);
+
+$app = new Slim\App($c);
 
 // landing page
 $app->get('/', function($req, $res, $args){
