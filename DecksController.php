@@ -23,22 +23,54 @@ class DecksController {
         try {
             $deck = Deck::find($args['id']);
         } catch (Exception $e) {
-            $res->write(json_encode(['error' => $e->getMessage()]));
+            $res->write(json_encode([
+                'success' => false,
+                'error'   => $e->getMessage()
+            ]));
         }
+
+        $params = $req->getParsedBody();
 
         switch ($args['action']){
             case 'show':
-
+                $res->write(json_encode($deck));
                 break;
             case 'shuffle':
-
+                $deck->shuffle();
+                $deck->save();
+                $res->write(json_encode([
+                    'success'         => true,
+                    'cards_remaining' => $deck->cards_remaining
+                ]));
                 break;
             case 'draw':
+                try{
+                    $count = isset($params['count']) ? $params['count'] : 1;
+                    $cards = $deck->draw($count);
+                    $deck->save();
+                    $res->write(json_encode([
 
+                        'success' => true,
+                        'cards' => $cards,
+                        'cards_remaining' => $deck->cards_remaining
+                    ]));
+
+                } catch (Exception $e) {
+                    $res->write(json_encode([
+                        'success' => false,
+                        'error' => $e->getMessage()
+                    ]));
+                }
+
+                break;
+            default:
+                $res->write(json_encode([
+                    'success' => false,
+                    'error'   => 'invalid action'
+                ]));
                 break;
         }
 
-        $res->write(json_encode($deck));
 
         return $res;
     }
