@@ -88,7 +88,7 @@ class Deck {
         } else {
             // no id, so this is a new deck 
 
-            $id = uniqid('', true);
+            $id = uniqid();
             $query = 'INSERT INTO decks (cards, unique_id) VALUES (:cards, :id)';
             $stmt = $dbc->prepare($query);
             $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
