@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 require_once 'Card.php';
 
 class Deck {
     public $cards           = []; 
-    public $id              = 0;
+    public $id              = '';
     public $cards_remaining = 0;
 
     public function __construct($id = null, $cards = []){
@@ -35,7 +35,7 @@ class Deck {
         // grab the PDO database connection
         require '../dbc.php';
 
-        $query = 'SELECT cards FROM decks WHERE id = :id';
+        $query = 'SELECT cards FROM decks WHERE unique_id = :id';
         $stmt = $dbc->prepare($query);
         $stmt->bindValue(':id', $id, PDO::PARAM_STR);
         $stmt->execute();
@@ -79,7 +79,7 @@ class Deck {
 
         if ($this->id) {
             // update
-            $query = 'UPDATE decks SET cards = :cards WHERE id = :id';
+            $query = 'UPDATE decks SET cards = :cards WHERE unique_id = :id';
             $stmt = $dbc->prepare($query);
             $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
             $stmt->bindValue(':id', $this->id, PDO::PARAM_STR);
@@ -87,11 +87,15 @@ class Deck {
 
         } else {
             // no id, so this is a new deck 
-            $query = 'INSERT INTO decks (cards) VALUES (:cards)';
+
+            $id = uniqid('', true);
+            $query = 'INSERT INTO decks (cards, unique_id) VALUES (:cards, :id)';
             $stmt = $dbc->prepare($query);
             $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
+            $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();
-            $this->id = $dbc->lastInsertId();
+
+            $this->id = $id;
         }
     }
 
