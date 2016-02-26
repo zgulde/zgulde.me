@@ -27,6 +27,7 @@ class DecksController {
                 'success' => false,
                 'error'   => $e->getMessage()
             ]));
+            return $res;
         }
 
         $params = $req->getParsedBody();
