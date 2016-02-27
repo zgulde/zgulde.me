@@ -3,8 +3,9 @@
 require_once 'Card.php';
 
 class Deck {
-    public $cards           = []; 
-    public $id              = '';
+
+    public           $cards = [];
+    public              $id = '';
     public $cards_remaining = 0;
 
     public function __construct($id = null, $cards = []){
@@ -13,7 +14,7 @@ class Deck {
 
         // create a new full deck if no cards are passed
         if (empty($cards)){
-            $suits  = ['C', 'S', 'H', 'D'];
+             $suits = ['C', 'S', 'H', 'D'];
             $values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 
             foreach($suits as $suit){
@@ -36,7 +37,8 @@ class Deck {
         require '../dbc.php';
 
         $query = 'SELECT cards FROM decks WHERE unique_id = :id';
-        $stmt = $dbc->prepare($query);
+         $stmt = $dbc->prepare($query);
+
         $stmt->bindValue(':id', $id, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -80,7 +82,8 @@ class Deck {
         if ($this->id) {
             // update
             $query = 'UPDATE decks SET cards = :cards WHERE unique_id = :id';
-            $stmt = $dbc->prepare($query);
+             $stmt = $dbc->prepare($query);
+
             $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
             $stmt->bindValue(':id', $this->id, PDO::PARAM_STR);
             $stmt->execute();
@@ -88,9 +91,10 @@ class Deck {
         } else {
             // no id, so this is a new deck 
 
-            $id = uniqid();
+               $id = uniqid();
             $query = 'INSERT INTO decks (cards, unique_id) VALUES (:cards, :id)';
-            $stmt = $dbc->prepare($query);
+             $stmt = $dbc->prepare($query);
+
             $stmt->bindValue(':cards', json_encode($this->cards), PDO::PARAM_STR);
             $stmt->bindValue(':id', $id, PDO::PARAM_STR);
             $stmt->execute();

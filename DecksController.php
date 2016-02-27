@@ -2,8 +2,8 @@
 
 class DecksController {
     public static function create($req, $res, $args){
-        $res    = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
         $params = $req->getParsedBody();
+           $res = $res->withHeader('Content-Type', 'application/json; charset=UTF-8');
 
         $deck = new Deck();
 
@@ -25,7 +25,7 @@ class DecksController {
         } catch (Exception $e) {
             $res->write(json_encode([
                 'success' => false,
-                'error'   => $e->getMessage()
+                  'error' => $e->getMessage()
             ]));
             return $res;
         }
@@ -40,7 +40,7 @@ class DecksController {
                 $deck->shuffle();
                 $deck->save();
                 $res->write(json_encode([
-                    'success'         => true,
+                            'success' => true,
                     'cards_remaining' => $deck->cards_remaining
                 ]));
                 break;
@@ -51,15 +51,15 @@ class DecksController {
                     $deck->save();
                     $res->write(json_encode([
 
-                        'success' => true,
-                        'cards' => $cards,
+                                'success' => true,
+                                  'cards' => $cards,
                         'cards_remaining' => $deck->cards_remaining
                     ]));
 
                 } catch (Exception $e) {
                     $res->write(json_encode([
                         'success' => false,
-                        'error' => $e->getMessage()
+                          'error' => $e->getMessage()
                     ]));
                 }
 
@@ -67,7 +67,7 @@ class DecksController {
             default:
                 $res->write(json_encode([
                     'success' => false,
-                    'error'   => 'invalid action'
+                      'error' => 'invalid action'
                 ]));
                 break;
         }
