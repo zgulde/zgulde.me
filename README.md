@@ -41,7 +41,7 @@ Each card object has several properties:
 // GET /decks/{deck_id}
 
 {
-    "id": "42",
+    "id": "56d0eb0d376c8",
     "cards_remaining": 2,
     "cards": [
         {
@@ -63,22 +63,19 @@ Each card object has several properties:
 }
 ```
 
-
-
 ## Routes
 
 All routes are based of of `zgulde.me/cardsapi/`
 
-### Creating a new Deck
+|Action|Method|Route|
+|-----|-----|-----|
+|create a deck|POST|`/decks`|
+|view a deck|GET|`/decks/{deck_id}`|
+|shuffle a deck|GET|`decks/{deck_id}/shuffle`|
+|draw a card(s)|GET|`decks/{deck_id}/draw`|
 
-`POST` to `/decks`
+**Optional parameters**
 
-- optionally include a parameter `shuffle` set to `true` to return a shuffled deck
+Creating a deck route takes an option parameter `shuffle`, that when set to `true` will both create a deck and shuffle it
 
-**jQuery ajax request Example**
-
-```js
-$.post('zgulde.me/cardsapi/decks', {
-    "shuffle": true    
-})
-```
+Drawing a card will take an optional parameter `count` that can be set to a number of cards to draw
